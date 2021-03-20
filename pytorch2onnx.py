@@ -70,7 +70,7 @@ if __name__ == '__main__':
     # TensorRT 변환 후에도 사용됨으로 기억해야함
     torch.onnx.export(torch_model,               # 실행될 모델
                       x,                         # 모델 입력값 (튜플 또는 여러 입력값들도 가능)
-                      "./../models/super_resolution.onnx",   # 모델 저장 경로 (파일 또는 파일과 유사한 객체 모두 가능)
+                      "./models/super_resolution.onnx",   # 모델 저장 경로 (파일 또는 파일과 유사한 객체 모두 가능)
                       export_params=True,        # 모델 파일 안에 학습된 모델 가중치를 저장할지의 여부
                       opset_version=10,          # 모델을 변환할 때 사용할 ONNX 버전
                       do_constant_folding=True,  # 최적하시 상수폴딩을 사용할지의 여부

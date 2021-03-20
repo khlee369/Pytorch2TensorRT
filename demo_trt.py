@@ -9,7 +9,7 @@ import tensorrt as trt
 import pycuda.driver as cuda
 import pycuda.autoinit
 
-from trt_tuils import HostDeviceMem, allocate_buffers, get_engine, do_inference, TRT_LOGGER, GiB
+from trt_utils import HostDeviceMem, allocate_buffers, get_engine, do_inference, TRT_LOGGER, GiB
 
 from tqdm import tqdm
 
