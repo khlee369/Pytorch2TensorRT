@@ -4,12 +4,12 @@ Pytorch로 구현된 모델을 ONNX로 바꾸고 ONNX에서 TensorRT로 엔진�
 Pytorch 공식 홈페이지에서 제공하는 ONNX Tutorial을 base로 진행
 
 
-## Pytorch Model
+## Pytorch -> ONNX
 환경 세팅은 공식 tutorial 참조
 
 Pytorch 공식 tutorial : https://tutorials.pytorch.kr/advanced/super_resolution_with_onnxruntime.html
 
-코드는 onnx.ipynb 참조
+코드는 onnx.ipynb, pytorch2onnx.py 참조
 
 ### example output
 ```python
@@ -40,23 +40,32 @@ tensor([[[[0.7651, 0.8741, 0.9048,  ..., 0.8559, 0.7837, 0.7129],
            0.8017341 , 0.7727227 ]]]], dtype=float32)]
 ```
 
-## Tensor RT
-환경 세팅은 Nvidia docker container 사용
-
+## ONNX -> TensorRT
+환경 세팅은
+1. Nvidia docker container 사용
 https://ngc.nvidia.com/catalog/containers/nvidia:tensorrt
-
-최신버전(20.12)은 TensorRT 버전(version>=7.2)과 nvidia driver 미스매치 이슈가 있음, 컨테이너는 20.03 tag로 진행하였으며 최신 버전의 TensorRT는 Jetson에서 지원을 하지 않는것으로 알고있기에 이점을 유의해야 한다.
-
-### ONNX -> TensorRT
-
 ```
 # container 안에서
 
 $ trtexec --onnx=super_resolution.onnx --explicitBatch --saveEngine=sample.trt --workspace=1024 --fp16
 ```
-### TensorRT Demo
+2. Jetson 사용시 (jetson jetpack이라는 가정 하에) models의 build_trt.sh 참고
+```
+$/usr/src/tensorrt/bin/trtexec \
+  --onnx=ONNX_MODEL.onnx \
+  --explicitBatch \
+  --saveEngine=TRT_ENGINE.trt \
+  --workspace=2048 \
+  --fp16 # fp32시 해당 옵션 제거
+```
 
-코드는 trt_test.ipynb 참조
+
+## TensorRT Demo
+
+### Python
+Python TensorRT Inference에 필요한 function은 trt_utils.py에 정리되어있음
+
+코드는 demo_trt.py 참조
 
 TensorRT 데모는 다음 레포를 참조함
 
@@ -80,17 +89,5 @@ array([[[0.76464844, 0.87353516, 0.9038086 , ..., 0.85595703,
          0.8017578 , 0.77246094]]], dtype=float32)
 ```
 
-Python TensorRT Inference에 필요한 function은 trt_utils.py에 정리되어있음
-
-Pytorch -> ONNX pytorch2onnx.py 참고
-
-ONNX -> TensorRT 는 (jetson jetpack이라는 가정 하에) trt_inference_samples/models의 build_trt.sh 참고
-
-```
-$/usr/src/tensorrt/bin/trtexec \
-  --onnx=ONNX_MODEL.onnx \
-  --explicitBatch \
-  --saveEngine=TRT_ENGINE.trt \
-  --workspace=2048 \
-  --fp16 # fp32시 해당 옵션 제거
-  ```
+### C++
+trt_cpp 디렉토리 참고
