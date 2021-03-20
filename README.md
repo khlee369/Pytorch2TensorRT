@@ -80,7 +80,7 @@ array([[[0.76464844, 0.87353516, 0.9038086 , ..., 0.85595703,
          0.8017578 , 0.77246094]]], dtype=float32)
 ```
 
-Python TensorRT Inference에 필요한 function은 trt.utils.py에 정리되어있음
+Python TensorRT Inference에 필요한 function은 trt_utils.py에 정리되어있음
 
 Pytorch -> ONNX pytorch2onnx.py 참고
 
