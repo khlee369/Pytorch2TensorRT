@@ -101,7 +101,6 @@ int main(int argc, char** argv)
     cout << model_path << endl;
 
     cout << "Hello TRT" << endl;
-    cout << "Hello TRT" << endl;
 
     // https://forums.developer.nvidia.com/t/how-to-load-and-deserialize-the-engine-file/79117
     // Read trt engine
@@ -175,41 +174,13 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    // std::vector<void*> m_DeviceBuffers(engine->getNbBindings());
-    // typedef struct CUstream_st* cudaStream_t;
-    // cudaStream_t m_CudaStream;
-
-    // cudaMalloc(&m_DeviceBuffers[0], 16);
-    // cudaMalloc(&m_DeviceBuffers[1], 144);
-
-    // cudaMemcpyAsync(buffers.at(0), a_in, 16, cudaMemcpyHostToDevice, m_CudaStream);
-    // cudaMemcpyAsync(buffers.at(1), a_out, 144, cudaMemcpyHostToDevice, m_CudaStream);
-
-    // cudaMemcpyAsync(m_DeviceBuffers[0], a_in, 16, cudaMemcpyHostToDevice, m_CudaStream);
     cout << "Execute TensorRT --------------------------" << endl;
-    // buffers[0] = a_in;
-    // buffers[1] = a_out;
 
     //https://zenoahn.tistory.com/85
     cudaMemcpy(buffers[0], a_in, 16, cudaMemcpyHostToDevice);
     cudaMemcpy(buffers[1], a_out, 144, cudaMemcpyHostToDevice);
 
     context->executeV2(buffers);
-    // context->executeV2(m_DeviceBuffers.data());
-    // context->enqueue(1, m_DeviceBuffers.data(), m_CudaStream, nullptr);
-    // context->executeV2(buffers.data());
-    // context->enqueue(1, buffers.data(), 0, nullptr);
-    // context->enqueue(1, buffers, 0, nullptr);
-    // context->enqueueV2(buffers.data(), m_CudaStream, nullptr);
-
-    // cudaMemcpyAsync(a_out, m_DeviceBuffers[1], 144, cudaMemcpyDeviceToHost, m_CudaStream);
-
-    // show output
-    // cout << "show output --------------------------" << endl;
-    // float *tmp_out = (float *)m_DeviceBuffers.data();
-    // for (int i=0; i<5; ++i){
-    //     cout << tmp_out[i] << endl;
-    // }
 
     //https://zenoahn.tistory.com/85
     cout << "Before Memcopy --------------------------" << endl;
@@ -226,10 +197,9 @@ int main(int argc, char** argv)
         cout << endl;
     }
 
-    cout << "After Memcopy --------------------------" << endl;
     cudaMemcpy(a_out, buffers[1], 144, cudaMemcpyDeviceToHost);
     cudaMemcpy(a_in, buffers[0], 16, cudaMemcpyDeviceToHost);
-
+    cout << "After Memcopy --------------------------" << endl;
     cout << "show input --------------------------" << endl;
     for (int i=0; i<4; ++i){
         cout << a_in[i] << ", ";
@@ -250,6 +220,5 @@ int main(int argc, char** argv)
         cudaFree(buf);
     }
 
-    // for (auto& deviceBuffer : m_DeviceBuffers) cudaFree(deviceBuffer);
     return 0;
 }
